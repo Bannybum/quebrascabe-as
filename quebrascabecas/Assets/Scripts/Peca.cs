@@ -19,8 +19,12 @@ public class Peca : MonoBehaviour
 
             // Adiciona no histórico para desfazer/replay
             PuzzleManager.Instance.RegistrarComando(pecaSelecionada, this);
-
+            PuzzleManager.Instance.SeraseTerminou();
+            
             pecaSelecionada = null;
+            
+            
         }
+        
     }
 }

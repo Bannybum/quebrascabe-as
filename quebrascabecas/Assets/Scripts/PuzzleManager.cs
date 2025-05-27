@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ public class PuzzleManager : MonoBehaviour
     public static PuzzleManager Instance;
     private Stack<ICommand> historico = new Stack<ICommand>();
     private List<ICommand> comandosReplay = new List<ICommand>();
-
+    public GameObject telaVitoria;
     void Awake()
     {
         Instance = this;
@@ -47,7 +48,7 @@ public class PuzzleManager : MonoBehaviour
     }
     
     
-    void SeraseTerminou()
+    public void SeraseTerminou()
     {
         for (int i = 0; i < pecas.Count; i++)
         {
@@ -55,9 +56,13 @@ public class PuzzleManager : MonoBehaviour
                 return;
         }
         
-        Debug.Log("Ae meno :D");
+        MostrarTelaDeVitoria();
     }
 
+    void MostrarTelaDeVitoria()
+    {
+        telaVitoria.SetActive(true);
+    }
     public void DesfazerUltimo()
     {
         if (historico.Count > 0)
@@ -79,20 +84,17 @@ public class PuzzleManager : MonoBehaviour
         StartCoroutine(ExecutarReplay());
     }
 
-    private IEnumerator<WaitForSeconds> ExecutarReplay()
+    private IEnumerator ExecutarReplay()
     {
-        // Reseta
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Puzzle");
+        telaVitoria.SetActive(false);
 
-        yield return new WaitForSeconds(1f);
-
-        foreach (var comando in comandosReplay)
+        foreach (ICommand comando in comandosReplay)
         {
             comando.Do();
             yield return new WaitForSeconds(1f);
         }
 
-        Debug.Log("Replay :D");
+        MostrarTelaDeVitoria();
     }
     
     public void CancelarReplay()
@@ -104,7 +106,7 @@ public class PuzzleManager : MonoBehaviour
             comando.Do();
         }
 
-        Debug.Log("Paro");
+        //Debug.Log("Paro");
     }
     
     // Update is called once per frame
